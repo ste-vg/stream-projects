@@ -1,0 +1,12 @@
+---
+layout: 'layouts/home.njk'
+title: 'Stream Projects'
+---
+
+<h1>Stream Projects</h1>
+
+<ul>
+{%- for project in collections.project -%}
+  <li><a href="{{project.url}}">{{ project.data.title }}</a></li>
+{%- endfor -%}
+</ul>

@@ -1,0 +1,27 @@
+:root
+{
+    --color-primary-light: #eee;
+    --color-primary-dark: #333;
+    --color-primary-accent: red;
+
+}
+
+html, body
+{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+body
+{
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+}
