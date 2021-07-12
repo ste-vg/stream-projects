@@ -1,11 +1,10 @@
 import * as THREE from "three";
-import { BokehShader, BokehDepthShader  } from "three/examples/jsm/shaders/BokehShader2" //"three/examples/jsm/shaders/BokehShader2.js'";
+import { BokehShader  } from "three/examples/jsm/shaders/BokehShader2" //"three/examples/jsm/shaders/BokehShader2.js'";
 import { GUI } from 'dat.gui';
-import { MeshLineMaterial } from "./MeshLine"
 
 const COLORS = {
-  background: '#000814',
-  floor: '#000814'
+  background: '#000',
+  floor: '#000'
 }
 class Stage {
 
@@ -16,8 +15,8 @@ class Stage {
     this.postprocessing =  { };
     this.effectController = {}
     this.shaderSettings = {
-      rings: 6,
-      samples: 3
+      rings: 4,
+      samples: 2
     };
 
     //need lines here so we can update materials in postprocessing
@@ -33,10 +32,10 @@ class Stage {
       height: 1
     }
 
-    this.setupLights();
+    // this.setupLights();
     this.setupCamera();
     // this.setupFloor();
-    this.setupFog();
+    // this.setupFog();
     this.setupRenderer();
     this.initPostprocessing();
     this.onResize();
@@ -51,7 +50,7 @@ class Stage {
 
     this.effectController = {
 
-      enabled: true,
+      enabled: false,
       jsDepthCalculation: true,
       shaderFocus: false,
 
@@ -102,7 +101,7 @@ class Stage {
     gui.add( this.effectController, 'enabled' ).onChange( matChanger );
     gui.add( this.effectController, 'jsDepthCalculation' ).onChange( matChanger );
     gui.add( this.effectController, 'shaderFocus' ).onChange( matChanger );
-    gui.add( this.effectController, 'focalDepth', 0.0, 0.2, 0.0001 ).listen().onChange( matChanger );
+    gui.add( this.effectController, 'focalDepth', 0.0, 100, 0.1 ).listen().onChange( matChanger );
 
     gui.add( this.effectController, 'fstop', 0.1, 600, 0.1 ).onChange( matChanger );
     gui.add( this.effectController, 'maxblur', 0.0, 5.0, 0.025 ).onChange( matChanger );
@@ -150,8 +149,8 @@ class Stage {
   setupCamera() {
 
     this.lookAt = new THREE.Vector3(0, 0, 0);
-    this.camera = new THREE.PerspectiveCamera(40, this.size.width / this.size.height, 0.1, 100);
-    this.camera.position.set(0, 4, 6);
+    this.camera = new THREE.PerspectiveCamera(40, this.size.width / this.size.height, 0.1, 150);
+    this.camera.position.set(0, 80, 100);
     this.camera.home = {
       position: { ...this.camera.position }
     }
@@ -171,7 +170,7 @@ class Stage {
   }
 
   setupFog() {
-    const fog = new THREE.Fog(COLORS.background, 6, 20)
+    const fog = new THREE.Fog(COLORS.background, 0, 1)
     this.scene.fog = fog;
   }
 
@@ -182,12 +181,12 @@ class Stage {
       antialias: true,
       
     })
-    this.renderer.physicallyCorrectLights = true;
-    this.renderer.outputEncoding = THREE.sRGBEncoding;
-    this.renderer.toneMapping = THREE.ReinhardToneMapping;
-    this.renderer.toneMappingExposure = 3;
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // this.renderer.physicallyCorrectLights = true;
+    // this.renderer.outputEncoding = THREE.sRGBEncoding;
+    // this.renderer.toneMapping = THREE.ReinhardToneMapping;
+    // this.renderer.toneMappingExposure = 3;
+    // this.renderer.shadowMap.enabled = true;
+    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     this.container.appendChild( this.renderer.domElement );
   }
@@ -274,18 +273,15 @@ class Stage {
       this.renderer.clear();
       this.renderer.render( this.scene, this.camera );
       // render depth into texture
-      
-      // this.scene.overrideMaterial = this.materialDepth;
-      
+         
       this.lines.forEach(line => line.obj.mesh.material.showDepth = true)
       this.renderer.setRenderTarget( this.postprocessing.rtTextureDepth );
       this.renderer.clear();
       this.renderer.render( this.scene, this.camera );
-      // this.scene.overrideMaterial = null;
       this.lines.forEach(line => line.obj.mesh.material.showDepth = false)
-
-      // render bokeh composite
-
+      
+      
+      this.renderer.clear();
       this.renderer.setRenderTarget( null );
       this.renderer.render( this.postprocessing.scene, this.postprocessing.camera );
 

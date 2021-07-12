@@ -13,12 +13,16 @@ lineGroup.rotation.y = Math.PI
 stage.add(lineGroup);
 // const lines = [];
 
-for (let i = 0; i < 200; i++) {
-  
+for (let i = 0; i < 600; i++) {
+
+  const lineThickness = 0.1 + Math.random() * 0.1;
+  const startRadius = 2 + Math.random() * 0.5;
+  const lineColor = colors[Math.floor(Math.random() * colors.length)];
+
   const line = new Line(
-    0.005 + Math.random() * 0.02 , 
-    colors[Math.floor(Math.random() * colors.length)],
-    0.4 + Math.random() * 0.1,
+    lineThickness,
+    lineColor,
+    startRadius,
     stage.camera.near,
     stage.camera.far
   )
@@ -31,7 +35,7 @@ for (let i = 0; i < 200; i++) {
 
 const tick = () => {
   lineGroup.rotation.y += 0.01;
-  lineGroup.rotation.x = Math.cos(lineGroup.rotation.y * 1.2) * 0.3;
+  lineGroup.rotation.x = Math.cos(lineGroup.rotation.y * 1.2) * 0.5;
   lineGroup.rotation.z = Math.sin(lineGroup.rotation.y) * 0.01;
 
   // lines.forEach(line => {
