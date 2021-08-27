@@ -15,7 +15,8 @@
     <script>document.documentElement.classList.remove('no-js');</script>
 
     {% set css %}
-        {% include "../../index.scss" %}
+        {% include "../../global.scss" %}
+        {% include 'layouts/details.scss' %}
     {% endset %}
 
     <style>
@@ -24,6 +25,12 @@
 </head>
 <body id="top" class="{% if hasLoading %}loading{% endif %} ">
 
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+        </ul>
+    </nav>
+    <h1>{{title}}</h1>
     <a href="../">See the project</a>
 
     {{ content | safe }}
